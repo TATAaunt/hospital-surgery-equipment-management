@@ -11,6 +11,7 @@ interface Equipment {
   serialNumber: string;
   status: 'available' | 'in-use' | 'maintenance' | 'out-of-service';
   location: string;
+  department: 'DEN' | 'ENT' | 'URO' | 'GS' | 'GTS';
   lastMaintenance: string;
   nextMaintenance: string;
 }
@@ -18,33 +19,58 @@ interface Equipment {
 const mockData: Equipment[] = [
   {
     id: '1',
-    name: '수술용 현미경',
+    name: '치과용 현미경',
     category: '현미경',
     serialNumber: 'SM-001',
     status: 'available',
     location: '수술실 1',
+    department: 'DEN',
     lastMaintenance: '2024-01-15',
     nextMaintenance: '2024-04-15'
   },
   {
     id: '2',
-    name: '심장박동기',
-    category: '생명유지장치',
-    serialNumber: 'PM-002',
+    name: '이비인후과 내시경',
+    category: '내시경',
+    serialNumber: 'EN-002',
     status: 'in-use',
     location: '수술실 2',
+    department: 'ENT',
     lastMaintenance: '2024-01-10',
     nextMaintenance: '2024-04-10'
   },
   {
     id: '3',
-    name: '인공호흡기',
-    category: '생명유지장치',
-    serialNumber: 'VM-003',
+    name: '비뇨기과 수술기구',
+    category: '수술기구',
+    serialNumber: 'UR-003',
     status: 'maintenance',
     location: '정비실',
+    department: 'URO',
     lastMaintenance: '2024-01-20',
     nextMaintenance: '2024-04-20'
+  },
+  {
+    id: '4',
+    name: '일반외과 수술세트',
+    category: '수술세트',
+    serialNumber: 'GS-004',
+    status: 'available',
+    location: '수술실 3',
+    department: 'GS',
+    lastMaintenance: '2024-01-12',
+    nextMaintenance: '2024-04-12'
+  },
+  {
+    id: '5',
+    name: '흉부외과 심장박동기',
+    category: '생명유지장치',
+    serialNumber: 'GT-005',
+    status: 'out-of-service',
+    location: '수술실 4',
+    department: 'GTS',
+    lastMaintenance: '2024-01-08',
+    nextMaintenance: '2024-04-08'
   }
 ];
 
@@ -52,6 +78,7 @@ export default function Home() {
   const { isAuthenticated, user, logout, loading } = useAuth();
   const router = useRouter();
   const [equipment, setEquipment] = useState<Equipment[]>(mockData);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('ALL');
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEquipment, setNewEquipment] = useState<Partial<Equipment>>({
     name: '',
@@ -59,6 +86,7 @@ export default function Home() {
     serialNumber: '',
     status: 'available',
     location: '',
+    department: 'DEN',
     lastMaintenance: '',
     nextMaintenance: ''
   });
@@ -134,12 +162,27 @@ export default function Home() {
     setEquipment(equipment.filter(item => item.id !== id));
   };
 
+  const getDepartmentName = (dept: string) => {
+    switch (dept) {
+      case 'DEN': return '치과';
+      case 'ENT': return '이비인후과';
+      case 'URO': return '비뇨기과';
+      case 'GS': return '일반외과';
+      case 'GTS': return '흉부외과';
+      default: return dept;
+    }
+  };
+
+  const filteredEquipment = selectedDepartment === 'ALL' 
+    ? equipment 
+    : equipment.filter(e => e.department === selectedDepartment);
+
   const stats = {
-    total: equipment.length,
-    available: equipment.filter(e => e.status === 'available').length,
-    inUse: equipment.filter(e => e.status === 'in-use').length,
-    maintenance: equipment.filter(e => e.status === 'maintenance').length,
-    outOfService: equipment.filter(e => e.status === 'out-of-service').length
+    total: filteredEquipment.length,
+    available: filteredEquipment.filter(e => e.status === 'available').length,
+    inUse: filteredEquipment.filter(e => e.status === 'in-use').length,
+    maintenance: filteredEquipment.filter(e => e.status === 'maintenance').length,
+    outOfService: filteredEquipment.filter(e => e.status === 'out-of-service').length
   };
 
   return (
@@ -176,6 +219,73 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Department Selection */}
+        <div className="bg-white p-6 rounded-lg shadow mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">진료과별 기구 현황</h2>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setSelectedDepartment('ALL')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'ALL'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              전체 기구
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('DEN')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'DEN'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              DEN (치과)
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('ENT')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'ENT'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              ENT (이비인후과)
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('URO')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'URO'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              URO (비뇨기과)
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('GS')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'GS'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              GS (일반외과)
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('GTS')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === 'GTS'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              GTS (흉부외과)
+            </button>
+          </div>
+        </div>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
@@ -225,6 +335,9 @@ export default function Home() {
                     위치
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    진료과
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     마지막 정비
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -236,7 +349,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {equipment.map((item) => (
+                {filteredEquipment.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {item.name}
@@ -254,6 +367,9 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.location}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getDepartmentName(item.department)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.lastMaintenance}
@@ -335,6 +451,20 @@ export default function Home() {
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                       placeholder="위치를 입력하세요"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">진료과</label>
+                    <select
+                      value={newEquipment.department}
+                      onChange={(e) => setNewEquipment({...newEquipment, department: e.target.value as Equipment['department']})}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    >
+                      <option value="DEN">DEN (치과)</option>
+                      <option value="ENT">ENT (이비인후과)</option>
+                      <option value="URO">URO (비뇨기과)</option>
+                      <option value="GS">GS (일반외과)</option>
+                      <option value="GTS">GTS (흉부외과)</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">마지막 정비일</label>
