@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     // 간단한 인증 로직 (실제 환경에서는 서버 API를 사용해야 함)
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'hospital_admin' && password === 'MedEquip2024!') {
       const userData: User = {
         username,
         role: 'admin',

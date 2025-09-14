@@ -18,7 +18,7 @@ export default function LoginPage() {
     setError('');
 
     // 간단한 인증 로직 (실제 환경에서는 서버 API를 사용해야 함)
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
+    if (credentials.username === 'hospital_admin' && credentials.password === 'MedEquip2024!') {
       // 로그인 성공
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('user', JSON.stringify({
@@ -123,8 +123,8 @@ export default function LoginPage() {
             <div className="mt-4 bg-gray-50 p-4 rounded-md">
               <p className="text-sm text-gray-600 mb-2">데모용 계정 정보:</p>
               <div className="text-sm">
-                <p><strong>사용자명:</strong> admin</p>
-                <p><strong>비밀번호:</strong> admin123</p>
+                <p><strong>사용자명:</strong> hospital_admin</p>
+                <p><strong>비밀번호:</strong> MedEquip2024!</p>
               </div>
             </div>
           </div>
