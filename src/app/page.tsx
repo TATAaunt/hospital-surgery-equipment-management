@@ -149,8 +149,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">병원 수술 장비 관리 시스템</h1>
-              <p className="text-gray-600 mt-1">수술실 장비의 효율적인 관리와 모니터링</p>
+              <h1 className="text-3xl font-bold text-gray-900">수술실 기구 관리 시스템</h1>
+              <p className="text-gray-600 mt-1">수술실 기구의 효율적인 관리와 모니터링</p>
               {user && (
                 <p className="text-sm text-gray-500 mt-1">
                   안녕하세요, {user.username}님 ({user.role})
@@ -162,7 +162,7 @@ export default function Home() {
                 onClick={() => setShowAddForm(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
               >
-                장비 추가
+                기구 추가
               </button>
               <button
                 onClick={logout}
@@ -180,7 +180,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-            <div className="text-gray-600">전체 장비</div>
+            <div className="text-gray-600">전체 기구</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="text-2xl font-bold text-green-600">{stats.available}</div>
@@ -203,14 +203,14 @@ export default function Home() {
         {/* Equipment Table */}
         <div className="bg-white shadow rounded-lg">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">장비 목록</h2>
+            <h2 className="text-xl font-semibold text-gray-900">기구 목록</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    장비명
+                    기구명
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     카테고리
@@ -281,7 +281,7 @@ export default function Home() {
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
               <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">새 장비 추가</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">새 기구 추가</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">장비명</label>
@@ -290,7 +290,7 @@ export default function Home() {
                       value={newEquipment.name}
                       onChange={(e) => setNewEquipment({...newEquipment, name: e.target.value})}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="장비명을 입력하세요"
+                      placeholder="기구명을 입력하세요"
                     />
                   </div>
                   <div>

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "병원 수술 장비 관리 시스템",
-  description: "병원의 수술 장비를 효율적으로 관리하는 시스템",
+  title: "수술실 기구 관리 시스템",
+  description: "수술실 기구를 효율적으로 관리하는 시스템",
 };
 
 export default function RootLayout({
