@@ -26,7 +26,9 @@ export default function LoginPage() {
         role: 'admin',
         loginTime: new Date().toISOString()
       }));
-      router.push('/');
+      
+      // 페이지 새로고침 후 리다이렉트
+      window.location.href = '/';
     } else {
       setError('사용자명 또는 비밀번호가 올바르지 않습니다.');
     }

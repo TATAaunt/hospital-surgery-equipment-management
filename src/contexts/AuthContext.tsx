@@ -58,8 +58,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('user', JSON.stringify(userData));
       
+      // 상태 즉시 업데이트
       setIsAuthenticated(true);
       setUser(userData);
+      
       return true;
     }
     return false;
