@@ -7,70 +7,70 @@ import { useAuth } from '@/contexts/AuthContext';
 interface Equipment {
   id: string;
   name: string;
-  category: string;
+  manufacturer: string;
   serialNumber: string;
-  status: 'available' | 'in-use' | 'maintenance' | 'out-of-service';
+  status: 'available' | 'repair' | 'disposal' | 'replacement';
   location: string;
-  department: 'DEN' | 'ENT' | 'URO' | 'GS' | 'GTS';
-  lastMaintenance: string;
-  nextMaintenance: string;
+  sterilizationMethod: 'STEAM-P1' | 'STEAM-P5' | 'STERRAD' | 'EO';
+  sterilizationDate: string;
+  expiryDate: string;
 }
 
 const mockData: Equipment[] = [
   {
     id: '1',
     name: '치과용 현미경',
-    category: '현미경',
+    manufacturer: '올림푸스',
     serialNumber: 'SM-001',
     status: 'available',
-    location: '수술실 1',
-    department: 'DEN',
-    lastMaintenance: '2024-01-15',
-    nextMaintenance: '2024-04-15'
+    location: 'Rm1',
+    sterilizationMethod: 'STEAM-P1',
+    sterilizationDate: '2024-01-15',
+    expiryDate: '2024-01-22'
   },
   {
     id: '2',
     name: '이비인후과 내시경',
-    category: '내시경',
+    manufacturer: '칼슈토츠',
     serialNumber: 'EN-002',
-    status: 'in-use',
-    location: '수술실 2',
-    department: 'ENT',
-    lastMaintenance: '2024-01-10',
-    nextMaintenance: '2024-04-10'
+    status: 'repair',
+    location: 'Rm5',
+    sterilizationMethod: 'STEAM-P5',
+    sterilizationDate: '2024-01-10',
+    expiryDate: '2024-01-17'
   },
   {
     id: '3',
     name: '비뇨기과 수술기구',
-    category: '수술기구',
+    manufacturer: '메드트로닉',
     serialNumber: 'UR-003',
-    status: 'maintenance',
-    location: '정비실',
-    department: 'URO',
-    lastMaintenance: '2024-01-20',
-    nextMaintenance: '2024-04-20'
+    status: 'disposal',
+    location: '의공기술실',
+    sterilizationMethod: 'STERRAD',
+    sterilizationDate: '2024-01-20',
+    expiryDate: '2024-01-27'
   },
   {
     id: '4',
     name: '일반외과 수술세트',
-    category: '수술세트',
+    manufacturer: '존슨앤존슨',
     serialNumber: 'GS-004',
     status: 'available',
-    location: '수술실 3',
-    department: 'GS',
-    lastMaintenance: '2024-01-12',
-    nextMaintenance: '2024-04-12'
+    location: 'Rm12',
+    sterilizationMethod: 'EO',
+    sterilizationDate: '2024-01-12',
+    expiryDate: '2024-01-19'
   },
   {
     id: '5',
     name: '흉부외과 심장박동기',
-    category: '생명유지장치',
+    manufacturer: '보스턴사이언티픽',
     serialNumber: 'GT-005',
-    status: 'out-of-service',
-    location: '수술실 4',
-    department: 'GTS',
-    lastMaintenance: '2024-01-08',
-    nextMaintenance: '2024-04-08'
+    status: 'replacement',
+    location: 'Rm18',
+    sterilizationMethod: 'STEAM-P1',
+    sterilizationDate: '2024-01-08',
+    expiryDate: '2024-01-15'
   }
 ];
 
@@ -82,13 +82,13 @@ export default function Home() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEquipment, setNewEquipment] = useState<Partial<Equipment>>({
     name: '',
-    category: '',
+    manufacturer: '',
     serialNumber: '',
     status: 'available',
     location: '',
-    department: 'DEN',
-    lastMaintenance: '',
-    nextMaintenance: ''
+    sterilizationMethod: 'STEAM-P1',
+    sterilizationDate: '',
+    expiryDate: ''
   });
 
   useEffect(() => {
@@ -115,9 +115,9 @@ export default function Home() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'available': return 'bg-green-100 text-green-800';
-      case 'in-use': return 'bg-blue-100 text-blue-800';
-      case 'maintenance': return 'bg-yellow-100 text-yellow-800';
-      case 'out-of-service': return 'bg-red-100 text-red-800';
+      case 'repair': return 'bg-yellow-100 text-yellow-800';
+      case 'disposal': return 'bg-red-100 text-red-800';
+      case 'replacement': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -125,35 +125,36 @@ export default function Home() {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'available': return '사용가능';
-      case 'in-use': return '사용중';
-      case 'maintenance': return '정비중';
-      case 'out-of-service': return '고장';
+      case 'repair': return '파손-수리중';
+      case 'disposal': return '폐기-구매중';
+      case 'replacement': return '노후-교체중';
       default: return status;
     }
   };
 
   const handleAddEquipment = () => {
-    if (newEquipment.name && newEquipment.category && newEquipment.serialNumber) {
+    if (newEquipment.name && newEquipment.manufacturer && newEquipment.serialNumber) {
       const newItem: Equipment = {
         id: Date.now().toString(),
         name: newEquipment.name!,
-        category: newEquipment.category!,
+        manufacturer: newEquipment.manufacturer!,
         serialNumber: newEquipment.serialNumber!,
         status: newEquipment.status as Equipment['status'] || 'available',
-        location: newEquipment.location || '',
-        department: newEquipment.department as Equipment['department'] || 'DEN',
-        lastMaintenance: newEquipment.lastMaintenance || '',
-        nextMaintenance: newEquipment.nextMaintenance || ''
+        location: newEquipment.location || 'Rm1',
+        sterilizationMethod: newEquipment.sterilizationMethod as Equipment['sterilizationMethod'] || 'STEAM-P1',
+        sterilizationDate: newEquipment.sterilizationDate || '',
+        expiryDate: newEquipment.expiryDate || ''
       };
       setEquipment([...equipment, newItem]);
       setNewEquipment({
         name: '',
-        category: '',
+        manufacturer: '',
         serialNumber: '',
         status: 'available',
-        location: '',
-        lastMaintenance: '',
-        nextMaintenance: ''
+        location: 'Rm1',
+        sterilizationMethod: 'STEAM-P1',
+        sterilizationDate: '',
+        expiryDate: ''
       });
       setShowAddForm(false);
     }
@@ -176,14 +177,14 @@ export default function Home() {
 
   const filteredEquipment = selectedDepartment === 'ALL' 
     ? equipment 
-    : equipment.filter(e => e.department === selectedDepartment);
+    : equipment.filter(e => e.location.includes(selectedDepartment));
 
   const stats = {
     total: filteredEquipment.length,
     available: filteredEquipment.filter(e => e.status === 'available').length,
-    inUse: filteredEquipment.filter(e => e.status === 'in-use').length,
-    maintenance: filteredEquipment.filter(e => e.status === 'maintenance').length,
-    outOfService: filteredEquipment.filter(e => e.status === 'out-of-service').length
+    repair: filteredEquipment.filter(e => e.status === 'repair').length,
+    disposal: filteredEquipment.filter(e => e.status === 'disposal').length,
+    replacement: filteredEquipment.filter(e => e.status === 'replacement').length
   };
 
   return (
@@ -298,16 +299,16 @@ export default function Home() {
             <div className="text-gray-600">사용가능</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-blue-600">{stats.inUse}</div>
-            <div className="text-gray-600">사용중</div>
+            <div className="text-2xl font-bold text-yellow-600">{stats.repair}</div>
+            <div className="text-gray-600">파손-수리중</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-yellow-600">{stats.maintenance}</div>
-            <div className="text-gray-600">정비중</div>
+            <div className="text-2xl font-bold text-red-600">{stats.disposal}</div>
+            <div className="text-gray-600">폐기-구매중</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <div className="text-2xl font-bold text-red-600">{stats.outOfService}</div>
-            <div className="text-gray-600">고장</div>
+            <div className="text-2xl font-bold text-orange-600">{stats.replacement}</div>
+            <div className="text-gray-600">노후-교체중</div>
           </div>
         </div>
 
@@ -324,10 +325,10 @@ export default function Home() {
                     기구명
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    카테고리
+                    제조사명
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    시리얼 번호
+                    S/N
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     상태
@@ -336,13 +337,13 @@ export default function Home() {
                     위치
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    진료과
+                    멸균방법
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    마지막 정비
+                    멸균일
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    다음 정비
+                    만료일
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     작업
@@ -356,7 +357,7 @@ export default function Home() {
                       {item.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.category}
+                      {item.manufacturer}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.serialNumber}
@@ -370,13 +371,13 @@ export default function Home() {
                       {item.location}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {getDepartmentName(item.department)}
+                      {item.sterilizationMethod}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.lastMaintenance}
+                      {item.sterilizationDate}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.nextMaintenance}
+                      {item.expiryDate}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
@@ -411,17 +412,17 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">카테고리</label>
+                    <label className="block text-sm font-medium text-gray-700">제조사명</label>
                     <input
                       type="text"
-                      value={newEquipment.category}
-                      onChange={(e) => setNewEquipment({...newEquipment, category: e.target.value})}
+                      value={newEquipment.manufacturer}
+                      onChange={(e) => setNewEquipment({...newEquipment, manufacturer: e.target.value})}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="카테고리를 입력하세요"
+                      placeholder="제조사명을 입력하세요"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">시리얼 번호</label>
+                    <label className="block text-sm font-medium text-gray-700">S/N</label>
                     <input
                       type="text"
                       value={newEquipment.serialNumber}
@@ -438,50 +439,72 @@ export default function Home() {
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                     >
                       <option value="available">사용가능</option>
-                      <option value="in-use">사용중</option>
-                      <option value="maintenance">정비중</option>
-                      <option value="out-of-service">고장</option>
+                      <option value="repair">파손-수리중</option>
+                      <option value="disposal">폐기-구매중</option>
+                      <option value="replacement">노후-교체중</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">위치</label>
-                    <input
-                      type="text"
+                    <select
                       value={newEquipment.location}
                       onChange={(e) => setNewEquipment({...newEquipment, location: e.target.value})}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                      placeholder="위치를 입력하세요"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">진료과</label>
-                    <select
-                      value={newEquipment.department}
-                      onChange={(e) => setNewEquipment({...newEquipment, department: e.target.value as Equipment['department']})}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                     >
-                      <option value="DEN">DEN (치과)</option>
-                      <option value="ENT">ENT (이비인후과)</option>
-                      <option value="URO">URO (비뇨기과)</option>
-                      <option value="GS">GS (일반외과)</option>
-                      <option value="GTS">GTS (흉부외과)</option>
+                      <option value="Rm1">Rm1</option>
+                      <option value="Rm2">Rm2</option>
+                      <option value="Rm3">Rm3</option>
+                      <option value="Rm4">Rm4</option>
+                      <option value="Rm5">Rm5</option>
+                      <option value="Rm6">Rm6</option>
+                      <option value="Rm7">Rm7</option>
+                      <option value="Rm8">Rm8</option>
+                      <option value="Rm9">Rm9</option>
+                      <option value="Rm10">Rm10</option>
+                      <option value="Rm11">Rm11</option>
+                      <option value="Rm12">Rm12</option>
+                      <option value="Rm13">Rm13</option>
+                      <option value="Rm14">Rm14</option>
+                      <option value="Rm15">Rm15</option>
+                      <option value="Rm16">Rm16</option>
+                      <option value="Rm17">Rm17</option>
+                      <option value="Rm18">Rm18</option>
+                      <option value="Rm19">Rm19</option>
+                      <option value="Rm20">Rm20</option>
+                      <option value="Rm21">Rm21</option>
+                      <option value="Rm22">Rm22</option>
+                      <option value="Rm23">Rm23</option>
+                      <option value="의공기술실">의공기술실</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">마지막 정비일</label>
+                    <label className="block text-sm font-medium text-gray-700">멸균방법</label>
+                    <select
+                      value={newEquipment.sterilizationMethod}
+                      onChange={(e) => setNewEquipment({...newEquipment, sterilizationMethod: e.target.value as Equipment['sterilizationMethod']})}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    >
+                      <option value="STEAM-P1">STEAM-P1</option>
+                      <option value="STEAM-P5">STEAM-P5</option>
+                      <option value="STERRAD">STERRAD</option>
+                      <option value="EO">EO</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">멸균일</label>
                     <input
                       type="date"
-                      value={newEquipment.lastMaintenance}
-                      onChange={(e) => setNewEquipment({...newEquipment, lastMaintenance: e.target.value})}
+                      value={newEquipment.sterilizationDate}
+                      onChange={(e) => setNewEquipment({...newEquipment, sterilizationDate: e.target.value})}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">다음 정비일</label>
+                    <label className="block text-sm font-medium text-gray-700">만료일</label>
                     <input
                       type="date"
-                      value={newEquipment.nextMaintenance}
-                      onChange={(e) => setNewEquipment({...newEquipment, nextMaintenance: e.target.value})}
+                      value={newEquipment.expiryDate}
+                      onChange={(e) => setNewEquipment({...newEquipment, expiryDate: e.target.value})}
                       className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
                     />
                   </div>
