@@ -141,6 +141,7 @@ export default function Home() {
         serialNumber: newEquipment.serialNumber!,
         status: newEquipment.status as Equipment['status'] || 'available',
         location: newEquipment.location || '',
+        department: newEquipment.department as Equipment['department'] || 'DEN',
         lastMaintenance: newEquipment.lastMaintenance || '',
         nextMaintenance: newEquipment.nextMaintenance || ''
       };
