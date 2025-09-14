@@ -81,7 +81,7 @@ export default function Home() {
 
   const handleAddEquipment = () => {
     if (newEquipment.name && newEquipment.category && newEquipment.serialNumber) {
-      const equipment: Equipment = {
+      const newItem: Equipment = {
         id: Date.now().toString(),
         name: newEquipment.name!,
         category: newEquipment.category!,
@@ -91,7 +91,7 @@ export default function Home() {
         lastMaintenance: newEquipment.lastMaintenance || '',
         nextMaintenance: newEquipment.nextMaintenance || ''
       };
-      setEquipment([...equipment, equipment]);
+      setEquipment([...equipment, newItem]);
       setNewEquipment({
         name: '',
         category: '',
