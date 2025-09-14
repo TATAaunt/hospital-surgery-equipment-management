@@ -11,6 +11,7 @@ interface Equipment {
   serialNumber: string;
   status: 'available' | 'repair' | 'disposal' | 'replacement';
   location: string;
+  department: 'DEN' | 'ENT' | 'URO' | 'GS' | 'GTS';
   sterilizationMethod: 'STEAM-P1' | 'STEAM-P5' | 'STERRAD' | 'EO';
   sterilizationDate: string;
   expiryDate: string;
@@ -24,6 +25,7 @@ const mockData: Equipment[] = [
     serialNumber: 'SM-001',
     status: 'available',
     location: 'Rm1',
+    department: 'DEN',
     sterilizationMethod: 'STEAM-P1',
     sterilizationDate: '2024-01-15',
     expiryDate: '2024-01-22'
@@ -35,6 +37,7 @@ const mockData: Equipment[] = [
     serialNumber: 'EN-002',
     status: 'repair',
     location: 'Rm5',
+    department: 'ENT',
     sterilizationMethod: 'STEAM-P5',
     sterilizationDate: '2024-01-10',
     expiryDate: '2024-01-17'
@@ -46,6 +49,7 @@ const mockData: Equipment[] = [
     serialNumber: 'UR-003',
     status: 'disposal',
     location: '의공기술실',
+    department: 'URO',
     sterilizationMethod: 'STERRAD',
     sterilizationDate: '2024-01-20',
     expiryDate: '2024-01-27'
@@ -57,6 +61,7 @@ const mockData: Equipment[] = [
     serialNumber: 'GS-004',
     status: 'available',
     location: 'Rm12',
+    department: 'GS',
     sterilizationMethod: 'EO',
     sterilizationDate: '2024-01-12',
     expiryDate: '2024-01-19'
@@ -68,6 +73,7 @@ const mockData: Equipment[] = [
     serialNumber: 'GT-005',
     status: 'replacement',
     location: 'Rm18',
+    department: 'GTS',
     sterilizationMethod: 'STEAM-P1',
     sterilizationDate: '2024-01-08',
     expiryDate: '2024-01-15'
@@ -86,6 +92,7 @@ export default function Home() {
     serialNumber: '',
     status: 'available',
     location: '',
+    department: 'DEN',
     sterilizationMethod: 'STEAM-P1',
     sterilizationDate: '',
     expiryDate: ''
@@ -141,6 +148,7 @@ export default function Home() {
         serialNumber: newEquipment.serialNumber!,
         status: newEquipment.status as Equipment['status'] || 'available',
         location: newEquipment.location || 'Rm1',
+        department: newEquipment.department as Equipment['department'] || 'DEN',
         sterilizationMethod: newEquipment.sterilizationMethod as Equipment['sterilizationMethod'] || 'STEAM-P1',
         sterilizationDate: newEquipment.sterilizationDate || '',
         expiryDate: newEquipment.expiryDate || ''
@@ -152,6 +160,7 @@ export default function Home() {
         serialNumber: '',
         status: 'available',
         location: 'Rm1',
+        department: 'DEN',
         sterilizationMethod: 'STEAM-P1',
         sterilizationDate: '',
         expiryDate: ''
@@ -177,7 +186,7 @@ export default function Home() {
 
   const filteredEquipment = selectedDepartment === 'ALL' 
     ? equipment 
-    : equipment.filter(e => e.location.includes(selectedDepartment));
+    : equipment.filter(e => e.department === selectedDepartment);
 
   const stats = {
     total: filteredEquipment.length,
@@ -337,6 +346,9 @@ export default function Home() {
                     위치
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    진료과
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     멸균방법
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -369,6 +381,9 @@ export default function Home() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.location}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getDepartmentName(item.department)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {item.sterilizationMethod}
@@ -475,6 +490,20 @@ export default function Home() {
                       <option value="Rm22">Rm22</option>
                       <option value="Rm23">Rm23</option>
                       <option value="의공기술실">의공기술실</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">진료과</label>
+                    <select
+                      value={newEquipment.department}
+                      onChange={(e) => setNewEquipment({...newEquipment, department: e.target.value as Equipment['department']})}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                    >
+                      <option value="DEN">DEN (치과)</option>
+                      <option value="ENT">ENT (이비인후과)</option>
+                      <option value="URO">URO (비뇨기과)</option>
+                      <option value="GS">GS (일반외과)</option>
+                      <option value="GTS">GTS (흉부외과)</option>
                     </select>
                   </div>
                   <div>
