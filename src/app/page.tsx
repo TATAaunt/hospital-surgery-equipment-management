@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Equipment {
   id: string;
@@ -47,6 +49,8 @@ const mockData: Equipment[] = [
 ];
 
 export default function Home() {
+  const { isAuthenticated, user, logout, loading } = useAuth();
+  const router = useRouter();
   const [equipment, setEquipment] = useState<Equipment[]>(mockData);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEquipment, setNewEquipment] = useState<Partial<Equipment>>({
@@ -58,6 +62,27 @@ export default function Home() {
     lastMaintenance: '',
     nextMaintenance: ''
   });
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -126,13 +151,26 @@ export default function Home() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">병원 수술 장비 관리 시스템</h1>
               <p className="text-gray-600 mt-1">수술실 장비의 효율적인 관리와 모니터링</p>
+              {user && (
+                <p className="text-sm text-gray-500 mt-1">
+                  안녕하세요, {user.username}님 ({user.role})
+                </p>
+              )}
             </div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-            >
-              장비 추가
-            </button>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                장비 추가
+              </button>
+              <button
+                onClick={logout}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </header>
