@@ -10,14 +10,10 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { 
   Plus, 
-  Search, 
-  Filter, 
   Edit, 
   Trash2, 
-  Eye,
   Play,
-  Square,
-  Wrench
+  Square
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -32,7 +28,6 @@ export default function EquipmentPage() {
     addEquipment, 
     updateEquipment, 
     deleteEquipment,
-    changeEquipmentStatus,
     startUsage,
     endUsage,
     usage
@@ -111,10 +106,6 @@ export default function EquipmentPage() {
     return department ? department.name : '알 수 없음';
   };
 
-  const getCategoryName = (categoryId: string) => {
-    const category = categories.find(c => c.id === categoryId);
-    return category ? category.name : '알 수 없음';
-  };
 
   const filteredEquipment = equipment.filter(eq => {
     const matchesSearch = eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

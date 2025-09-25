@@ -4,16 +4,12 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { 
   Share2, 
   X, 
   Copy, 
   Mail, 
-  MessageSquare,
-  Users,
-  Calendar,
-  Clock
+  MessageSquare
 } from 'lucide-react';
 import { Equipment, Department } from '@/types';
 

@@ -11,7 +11,6 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  Users,
   Activity,
   TrendingUp
 } from 'lucide-react';

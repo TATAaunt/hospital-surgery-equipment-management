@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useEquipment } from '@/contexts/EquipmentContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { 

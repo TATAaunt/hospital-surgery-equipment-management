@@ -9,7 +9,6 @@ import {
   EquipmentStats,
   DepartmentStats,
   Notification,
-  User
 } from '@/types';
 
 interface EquipmentContextType {
@@ -76,7 +75,7 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
   const [departmentStats, setDepartmentStats] = useState<DepartmentStats[]>([]);
   
   // 로딩 상태
-  const [loading, setLoading] = useState({
+  const [loading] = useState({
     departments: false,
     categories: false,
     equipment: false,
@@ -109,7 +108,7 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
   };
 
   // 로컬 스토리지에 데이터 저장
-  const saveDataToStorage = (key: string, data: any) => {
+  const saveDataToStorage = (key: string, data: unknown) => {
     try {
       localStorage.setItem(key, JSON.stringify(data));
     } catch (error) {
@@ -125,7 +124,7 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
     if (departments.length === 0) {
       initializeSampleData();
     }
-  }, []);
+  }, [departments.length]);
 
   // 샘플 데이터 초기화
   const initializeSampleData = () => {
