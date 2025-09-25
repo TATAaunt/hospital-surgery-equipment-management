@@ -186,10 +186,16 @@ export default function Home() {
 
   const filteredEquipment = selectedDepartment === 'ALL' 
     ? equipment 
-    : equipment.filter(e => e.department === selectedDepartment);
+    : equipment.filter(e => e.location === selectedDepartment);
+
+  // 수술세트와 엑스트라 기구 분류
+  const surgicalSets = filteredEquipment.filter(e => e.name.includes('수술세트') || e.name.includes('세트'));
+  const extraEquipment = filteredEquipment.filter(e => !e.name.includes('수술세트') && !e.name.includes('세트'));
 
   const stats = {
     total: filteredEquipment.length,
+    surgicalSets: surgicalSets.length,
+    extraEquipment: extraEquipment.length,
     available: filteredEquipment.filter(e => e.status === 'available').length,
     repair: filteredEquipment.filter(e => e.status === 'repair').length,
     disposal: filteredEquipment.filter(e => e.status === 'disposal').length,
@@ -230,9 +236,9 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Department Selection */}
+        {/* Room Selection */}
         <div className="bg-white p-6 rounded-lg shadow mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">진료과별 기구 현황</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">수술실별 기구 현황</h2>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setSelectedDepartment('ALL')}
@@ -242,66 +248,84 @@ export default function Home() {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              전체 기구
+              전체 수술실
             </button>
             <button
-              onClick={() => setSelectedDepartment('DEN')}
+              onClick={() => setSelectedDepartment('Rm1')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedDepartment === 'DEN'
+                selectedDepartment === 'Rm1'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              DEN (치과)
+              Rm1
             </button>
             <button
-              onClick={() => setSelectedDepartment('ENT')}
+              onClick={() => setSelectedDepartment('Rm2')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedDepartment === 'ENT'
+                selectedDepartment === 'Rm2'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              ENT (이비인후과)
+              Rm2
             </button>
             <button
-              onClick={() => setSelectedDepartment('URO')}
+              onClick={() => setSelectedDepartment('Rm3')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedDepartment === 'URO'
+                selectedDepartment === 'Rm3'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              URO (비뇨기과)
+              Rm3
             </button>
             <button
-              onClick={() => setSelectedDepartment('GS')}
+              onClick={() => setSelectedDepartment('Rm4')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedDepartment === 'GS'
+                selectedDepartment === 'Rm4'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              GS (일반외과)
+              Rm4
             </button>
             <button
-              onClick={() => setSelectedDepartment('GTS')}
+              onClick={() => setSelectedDepartment('Rm5')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                selectedDepartment === 'GTS'
+                selectedDepartment === 'Rm5'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              GTS (흉부외과)
+              Rm5
+            </button>
+            <button
+              onClick={() => setSelectedDepartment('의공기술실')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedDepartment === '의공기술실'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              의공기술실
             </button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-7 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
             <div className="text-gray-600">전체 기구</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="text-2xl font-bold text-blue-600">{stats.surgicalSets}</div>
+            <div className="text-gray-600">수술세트</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="text-2xl font-bold text-purple-600">{stats.extraEquipment}</div>
+            <div className="text-gray-600">엑스트라 기구</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="text-2xl font-bold text-green-600">{stats.available}</div>
@@ -417,7 +441,7 @@ export default function Home() {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">새 기구 추가</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">장비명</label>
+                    <label className="block text-sm font-medium text-gray-700">기구명</label>
                     <input
                       type="text"
                       value={newEquipment.name}
