@@ -24,7 +24,6 @@ export default function EquipmentPage() {
   const { 
     equipment, 
     departments, 
-    categories, 
     addEquipment, 
     updateEquipment, 
     deleteEquipment,

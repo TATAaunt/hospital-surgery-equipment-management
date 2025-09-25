@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { 
   Equipment, 
   Department, 
@@ -124,10 +124,10 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
     if (departments.length === 0) {
       initializeSampleData();
     }
-  }, [departments.length]);
+  }, [departments.length, initializeSampleData]);
 
   // 샘플 데이터 초기화
-  const initializeSampleData = () => {
+  const initializeSampleData = useCallback(() => {
     const sampleDepartments: Department[] = [
       {
         id: 'dept-1',
@@ -272,7 +272,7 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
     saveDataToStorage('notifications', sampleNotifications);
     
     calculateStats();
-  };
+  }, []);
 
   // 통계 계산
   const calculateStats = () => {
@@ -540,7 +540,7 @@ export function EquipmentProvider({ children }: { children: ReactNode }) {
     try {
       const updatedUsage = usage.map(u =>
         u.id === usageId
-          ? { ...u, endTime: new Date().toISOString(), status: 'completed', notes, updatedAt: new Date().toISOString() }
+          ? { ...u, endTime: new Date().toISOString(), status: 'completed' as const, notes, updatedAt: new Date().toISOString() }
           : u
       );
       
